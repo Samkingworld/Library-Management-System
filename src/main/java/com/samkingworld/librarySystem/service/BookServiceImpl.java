@@ -1,5 +1,6 @@
 package com.samkingworld.librarySystem.service;
 
+import com.samkingworld.librarySystem.exception.GlobalException;
 import com.samkingworld.librarySystem.model.Book;
 import com.samkingworld.librarySystem.model.BorrowedBook;
 import com.samkingworld.librarySystem.model.User;
@@ -38,14 +39,26 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional()
     @CacheEvict(value = {"allBooks", "getBook"}, allEntries = true)
     public Book addBook(Book book) {
-        book.setCreatedDateTime(bookRepo.createTime());
-        return bookRepo.save(book);
+        try {
+            book.setCreatedDateTime(bookRepo.createTime());
+            book.setBorrowed(false);
+            return bookRepo.save(book);
+        }catch (Exception e){
+            Book s = new Book();
+            s.setAuthor(e.getMessage().substring(e.getMessage().indexOf("["), e.getMessage().indexOf("[", e.getMessage().indexOf("[") +1)));
+            s.setTitle(e.getMessage().substring(e.getMessage().indexOf("["), e.getMessage().indexOf("[", e.getMessage().indexOf("[") +1)));
+            s.setPublicationYear(e.getMessage().substring(e.getMessage().indexOf("["), e.getMessage().indexOf("[", e.getMessage().indexOf("[") +1)));
+            s.setIsbn(e.getMessage().substring(e.getMessage().indexOf("["), e.getMessage().indexOf("[", e.getMessage().indexOf("[") +1)));
+            return s;
+        }
+
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public String borrowBook(BorrowedBook request) {
         Optional<User> user =  userRepo.findByUserId(request.getUserId());
         Book book = bookRepo.findByTitle(request.getBookName());

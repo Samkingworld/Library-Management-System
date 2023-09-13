@@ -32,7 +32,7 @@ public class Book {
 
     @NotEmpty(message = "Book ISBN  cannot be empty")
     @NotNull(message = "Book ISBN cannot be null")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String isbn;
 
     @NotEmpty(message = "Book publication year cannot be empty")

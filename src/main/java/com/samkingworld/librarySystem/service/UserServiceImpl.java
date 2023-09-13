@@ -16,8 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+
 
 @Service
 @AllArgsConstructor
@@ -27,9 +26,6 @@ public class UserServiceImpl implements UserService{
 
 
     public final EmailServiceImpl emailService;
-
-
-    ExecutorService executor;
 
 
 
@@ -49,7 +45,7 @@ public class UserServiceImpl implements UserService{
 
     @Cacheable(value = "getUser", key = "#email")
     public User getUserByEmail(String email){
-        return   userRepository.findByEmail(email).orElseThrow(() -> new UserException("User not found"));
+        return   userRepository.findByEmail(email).orElseThrow(() -> new  UserException("User not found"));
     }
 
     @CacheEvict(value = "allUsers", allEntries = true)

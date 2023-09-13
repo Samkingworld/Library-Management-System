@@ -3,6 +3,7 @@ package com.samkingworld.librarySystem.repository;
 import com.samkingworld.librarySystem.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -13,8 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT current_timestamp()", nativeQuery = true)
     String createTime();
 
-
-    Optional<User> findByUserId(String userId);
+    @Query(value = "SELECT * FROM users where user_id = :userId", nativeQuery = true)
+    Optional<User> findByUserId(@Param("userId") String userId);
 
     Optional<User> findByEmail(String email);
 

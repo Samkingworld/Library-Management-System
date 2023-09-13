@@ -6,25 +6,17 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Configuration
 public class EmailConfig {
 
-    @Bean
-    public ExecutorService executorService(){
-        ExecutorService executor = Executors.newFixedThreadPool(2);
-        return executor;
-    }
-
         @Bean
         public JavaMailSender javaMailSender() {
             JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-            javaMailSender.setHost("smtp.gmail.com"); //smtp server host
-            javaMailSender.setPort(587); //smtp server port
-            javaMailSender.setUsername("samking@gmail.com"); //email
-            javaMailSender.setPassword("xxxxxx"); //app config password from gmail under security
+            javaMailSender.setHost("smtp.gmail.com");
+            javaMailSender.setPort(587);
+            javaMailSender.setUsername("sxx@gmail.com");
+            javaMailSender.setPassword("x");
 
             Properties props = javaMailSender.getJavaMailProperties();
             props.put("mail.transport.protocol", "smtp");

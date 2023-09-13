@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class Controller {
 
     @GetMapping("/user/id/{id}")
     public Optional<User> getUserById(@PathVariable Long id){
-        return userService.getUserById(id.longValue());
+        return userService.getUserById(id);
     }
 
     @GetMapping("/user/email/{email}")
@@ -44,8 +45,14 @@ public class Controller {
         return userService.getUserByEmail(email);
     }
 
-    @GetMapping("/user/userId/{userId}")
-    public User getUserByUserId(@PathVariable String userId){return userService.getUserByUserId(userId);}
+    @GetMapping("/user/userId")
+    public User getUserByUserId(@RequestParam(name = "id") String userId){
+        try {
+            return userService.getUserByUserId(userId);
+        }catch (Exception e){
+            return new User();
+        }
+    }
 
 
     @PostMapping("/user/add")
@@ -70,6 +77,12 @@ public class Controller {
     //BOOKS
     @GetMapping("/books")
     public List<Book> getAllBooks(){return bookService.getAllBooks();};
+    @GetMapping("/book/byIsbn/{isbn}")
+    public Book getBookByIsbn(@PathVariable String isbn){return bookService.getBookByIsbn(isbn);};
+    @GetMapping("/book/byAuthor/{author}")
+    public List<Book> getBookByAuthor(@PathVariable String author){return bookService.getBookByAuthor(author);};
+    @GetMapping("/book/byTitle/{title}")
+    public Book getBookByTitle(@PathVariable String title){return bookService.getBookByTitle(title);};
     @PostMapping("/book/add")
     public Book addBook(@RequestBody @Valid Book book){return bookService.addBook(book);}
     @PostMapping("/book/borrow")
@@ -78,22 +91,23 @@ public class Controller {
     public String deleteBookByIsbn(@PathVariable String isbn){return bookService.deleteBookByIsbn(isbn);};
     @DeleteMapping("/book/byBookId/{bookId}")
     public String deleteBookById(@PathVariable Long bookId){return bookService.deleteBookById(bookId); };
-    @GetMapping("/book/byIsbn/{isbn}")
-    public Book getBookByIsbn(@PathVariable String isbn){return bookService.getBookByIsbn(isbn);};
-    @GetMapping("/book/byAuthor/{author}")
-    public List<Book> getBookByAuthor(@PathVariable String author){return bookService.getBookByAuthor(author);};
-    @GetMapping("/book/byTitle/{title}")
-    public Book getBookByTitle(@PathVariable String title){return bookService.getBookByTitle(title);};
+
 
     //Borrowed Book
-    @GetMapping("/borrowedBooks/{userId}")
-    public List<BorrowedBook> getBorrowedBookByUserId(@PathVariable String userId){return borrowedBookService.getBorrowedBookByUserId(userId);}
+    @GetMapping("/borrowedBooks/userId")
+    public List<BorrowedBook> getBorrowedBookByUserId(@RequestParam(name = "user_id") String userId){
+        try {
+            return borrowedBookService.getBorrowedBookByUserId(userId);
+        }catch (Exception e){
+            return new ArrayList<>();
+        }
+    }
+    @GetMapping("/borrowedBooks")
+    public List<BorrowedBook> getAllBorrowedBooks(){return borrowedBookService.getAllBorrowedBooks();}
 
     @PutMapping("/borrowedBooks/return/{isbn}")
     public String returnBook(String isbn){return borrowedBookService.returnBook(isbn);};
 
-    @GetMapping("/borrowedBooks")
-    public List<BorrowedBook> getAllBorrowedBooks(){return borrowedBookService.getAllBorrowedBooks();}
 
 
 }
